@@ -3,7 +3,7 @@ from hashlib import sha256
 import json
 import os
 from threading import Thread
-from urllib.parse import quote, unquote
+from urllib.parse import quote, unquote, urlparse, urlunparse
 import discord
 from discord.ext import commands
 from discord import Message
@@ -21,6 +21,7 @@ load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 CHANNEL_ID = int(os.getenv('CHANNEL_ID'))
 RICKROLL = "https://discord.com/vanityurl/dotcom/steakpants/flour/flower/index11.html"
+TIMEOUT = 7  # seconds
 
 
 class SilentUndefined(Undefined):
@@ -49,7 +50,7 @@ async def fetch(url):
 
     start_time = time.time()
     while True:
-        if time.time() - start_time > 10:
+        if time.time() - start_time > TIMEOUT:
             break
 
         print("fetching...")
@@ -78,10 +79,22 @@ def fetch_from_flask(url):
 
 # Flask
 
+def quote_path(url):
+    """Encode the path part of a URL.
+
+    Reference: https://github.com/pallets/werkzeug/blob/68227737cbdb39663a6f203decd2bf869987ca80/src/werkzeug/urls.py#L757
+    """
+    parts = urlparse(url)
+    return urlunparse(parts._replace(
+        path=quote(parts.path, '/%'),
+        query=quote(parts.query, ':&='),
+    ))
+
+
 @app.route('/')
 def index():
     """Render the embed as HTML"""
-    url = unquote(request.query_string.decode())
+    url = quote_path(unquote(request.query_string.decode()))
     if not url.startswith('http'):
         abort(400)
 
@@ -116,7 +129,7 @@ def oembed():
 @app.route("/gen")
 def gen():
     """Generate a copy-pastable markdown link that spoofs the URL."""
-    url = unquote(request.query_string.decode())
+    url = quote_path(unquote(request.query_string.decode()))
     if not url.startswith('http'):
         abort(400)
 
