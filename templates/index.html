@@ -1,0 +1,9 @@
+<meta content="{{ description }}" property="og:description" />
+<meta content="{{ thumbnail.url }}" property="og:image" />
+{% if color %}
+<meta name="theme-color" content="#{{ '%06x' % color }}" />
+{% endif %}
+<link type="application/json+oembed" href="{{ base }}oembed.json?author={{ title|default(author.name, true) | urlencode }}&provider={{ provider.name | urlencode }}" />
+{% if type == "article" %}
+<meta name="twitter:card" content="summary_large_image" />
+{% endif %}
