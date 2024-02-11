@@ -131,7 +131,7 @@ def gen():
     """Generate a copy-pastable markdown link that spoofs the URL."""
     url = quote_path(unquote(request.query_string.decode()))
     if not url.startswith('http'):
-        abort(400)
+        return render_template('gen.html')
 
     url_text = "http" + "\ufff4" + url[4:]
 
