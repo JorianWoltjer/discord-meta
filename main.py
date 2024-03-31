@@ -96,7 +96,7 @@ def index():
     """Render the embed as HTML"""
     url = quote_path(unquote(request.query_string.decode()))
     if not url.startswith('http'):
-        abort(400)
+        return redirect("https://github.com/JorianWoltjer/discord-meta")
 
     if 'Discordbot' not in request.headers.get('User-Agent'):
         return redirect(RICKROLL)
