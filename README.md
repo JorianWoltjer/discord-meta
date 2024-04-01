@@ -8,17 +8,20 @@ This works by sending and copying a real embed from the link and generating an [
 
 ## Example
 
-Fake             |  Real
-:-------------------------:|:-------------------------:
-![image](https://github.com/JorianWoltjer/discord-meta/assets/26067369/e721a3de-083b-4d60-aa8c-81e96e93c991)  |  ![image](https://github.com/JorianWoltjer/discord-meta/assets/26067369/e4124e4b-5738-4520-a8d5-ee757f9275f8)
+|                                                     Fake                                                     |                                                     Real                                                     |
+| :----------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------: |
+| ![image](https://github.com/JorianWoltjer/discord-meta/assets/26067369/e721a3de-083b-4d60-aa8c-81e96e93c991) | ![image](https://github.com/JorianWoltjer/discord-meta/assets/26067369/e4124e4b-5738-4520-a8d5-ee757f9275f8) |
 
 Clicking on either the **link itself**, the **white title** or even the **organization name** will instantly open [Rick Astley - Never Gonna Give You Up](https://www.youtube.com/watch?v=dQw4w9WgXcQ) without any confirmation!
+
+It even works for embedded videos, like sharing another YouTube link. This will keep the original thumbnail, but play the rickroll video when started:  
+[**See Example**](https://github.com/JorianWoltjer/discord-meta/assets/26067369/ee3770d1-35d7-4d31-9655-a94d11e90790)
 
 ## Technical Details
 
 You might be curious how this works. It turns out to be a combination of a few different tricks in Discord that cleverly combine into an almost undetectable rickroll. 
 
-1. Using "masked links" like `[example](https://example.com)` to put a different link behind some text.
+1. Using "masked links" with `<>` angle brackets like `[example](<https://example.com>)` to put a different link behind some text and hide the regular embed.
 2. While you cannot put another URL as the front for this masked link, you can get the same effect using the Unicode unmapped [`\ufff4`](https://unicode-explorer.com/c/FFF4) character. This is an invisible character that we can insert into the URL protocol to fool Discord into thinking it is not really a URL, while it still looks like one to the user, like: `[http\ufff4s://fake.com](https://example.com)`.
 3. Adding a custom embed to the URL without seeing the source of the embed in the message as a link using another masked link only containing `\ufff4` as the text, like: `[\ufff4](https://example.com)`.
 4. Using some `<meta>` [Open Graph](https://ogp.me/) tags to respond with the correct embed information, excluding the title.

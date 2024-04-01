@@ -1,9 +1,18 @@
-<meta content="{{ description }}" property="og:description" />
-<meta content="{{ thumbnail.url }}" property="og:image" />
-{% if color %}
+{% if description %}
+<meta property="og:description" content="{{ description }}" />
+{% endif %} {% if thumbnail %}
+<meta property="og:image" content="{{ thumbnail.url }}" />
+<meta property="og:image:width" content="{{ thumbnail.width }}" />
+<meta property="og:image:height" content="{{ thumbnail.height }}" />
+{% endif %} {% if color %}
 <meta name="theme-color" content="#{{ '%06x' % color }}" />
-{% endif %}
+{% endif %} {% if author or provider %}
 <link type="application/json+oembed" href="{{ base }}oembed.json?author={{ title|default(author.name, true) | urlencode }}&provider={{ provider.name | urlencode }}" />
-{% if type == "article" %}
+{% endif %} {% if type == "article" %}
 <meta name="twitter:card" content="summary_large_image" />
+{% elif type == "video" %}
+<meta name="og:type" content="video.other" />
+<meta property="og:video:url" content="https://www.youtube.com/embed/dQw4w9WgXcQ" />
+<meta property="og:video:width" content="{{ video.width }}" />
+<meta property="og:video:height" content="{{ video.height }}" />
 {% endif %}
