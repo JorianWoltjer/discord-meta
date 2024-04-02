@@ -6,7 +6,7 @@
 <meta property="og:image:height" content="{{ thumbnail.height }}" />
 {% endif %} {% if color %}
 <meta name="theme-color" content="#{{ '%06x' % color }}" />
-{% endif %} {% if author or provider %}
+{% endif %} {% if title or author or provider %}
 <link type="application/json+oembed" href="{{ base }}oembed.json?author={{ title|default(author.name, true) | urlencode }}&provider={{ provider.name | urlencode }}" />
 {% endif %} {% if type == "article" %}
 <meta name="twitter:card" content="summary_large_image" />
